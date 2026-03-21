@@ -1,0 +1,37 @@
+{% extends 'quickapp/base.html' %}
+{% block content %}
+
+<h2>All Events</h2>
+
+<div class="row">
+  {% for event in events %}
+    <div class="col-md-4">
+      <div class="card mb-4 shadow-sm">
+        {% if event.image %}
+          <img src="{{ event.image.url }}" class="img-fluid mb-2" style="height: 200px; width: 100%; object-fit: cover;">
+        {% endif %}
+        <div class="card-body">
+          <h5 class="card-title">{{ event.title }}</h5>
+          <p class="card-text">{{ event.description }}</p>
+          <p><strong>{{ event.date }}</strong></p>
+          <p><i class="text-muted">{{ event.location }}</i></p>
+          <p><strong>Fee:</strong> ₹{{ event.fee }}</p>
+
+          {% if user.is_authenticated %}
+            {% if event.id in registered_event_ids %}
+              <button class="btn btn-success mb-2" disabled>Registered</button>
+            {% else %}
+              <a href="{% url 'register_event' event.id %}" class="btn btn-primary mb-2">Register</a>
+            {% endif %}
+          {% else %}
+            <a href="{% url 'login' %}" class="btn btn-primary mb-2">Login to Register</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  {% empty %}
+    <p>No events available.</p>
+  {% endfor %}
+</div>
+
+{% endblock %}
